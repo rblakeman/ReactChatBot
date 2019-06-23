@@ -65,39 +65,15 @@ const styles = {
     // borderRadius: '100%',
     width: '70px'
   },
-
-  chatWindowCenter: {
-    backgroundColor: '#FFFFFF',
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
-    overflowY: 'scroll',
-    padding: '10px 20px'
-  },
-  loadingSpinner: {
-    alignSelf: 'center',
-    paddingTop: '100px'
-  },
   receipientName: {
     color: '#354058'
-  },
-  authorName: {
-    color: '#5294FC'
-  },
-  chatMessage: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '5px 0px'
-  },
-  chatText: {
-    color: '#B7BFC8' //'#CBD3DC'
   }
 }
 
 const BOT_NAME = 'React Bot'
 const USER_NAME = 'You'
 
-class Chat extends Component {
+class App extends Component {
   constructor(props) {
     super(props)
 
@@ -268,4 +244,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Chat)
+)(App)

@@ -40,10 +40,10 @@ class MessageList extends Component {
   }
 
   render() {
-    const { onboardingJSON, messages } = this.props
+    const { messages } = this.props
     return (
       <div style={styles.chatWindowCenter} id={'chat-scroll'}>
-        {onboardingJSON.length < 1 ? (
+        {messages.length < 1 ? (
           <div style={styles.loadingSpinner}>
             <BeatLoader size={15} color={'#C6EEF0'} />
           </div>
