@@ -78,6 +78,8 @@ class App extends Component {
     super(props);
 
     this.state = {};
+
+    console.log('last updated: March 14, 2021');
   }
 
   componentDidMount() {
