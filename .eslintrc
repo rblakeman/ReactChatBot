@@ -1,0 +1,12 @@
+{
+    "parser": "babel-eslint",
+    "env": {
+        "browser": true
+    },
+    "rules": {
+        "semi": "error",
+        "no-multiple-empty-lines": "error",
+        "newline-before-return": "error",
+        "no-trailing-spaces": "error"
+    }
+}
