@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { setJSON, sendMessage, updateID } from '../action'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { setJSON, sendMessage, updateID } from '../action';
 
-import { Button, TextField } from '@material-ui/core'
-import SendICON from '@material-ui/icons/SendOutlined'
+import { Button, TextField } from '@material-ui/core';
+import SendICON from '@material-ui/icons/SendOutlined';
 
 const styles = {
   chatWindowBottom: {
@@ -28,34 +28,38 @@ const styles = {
     marginLeft: '10px',
     height: '93%'
   }
-}
+};
 
 class ChatInput extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.state = { input: '' }
+    this.state = { input: '' };
   }
 
   sendInput(message) {
-    const { onboardingJSON, currentID } = this.props
+    const { onboardingJSON, currentID } = this.props;
     let newMessage = {
       message: message,
       author: this.props.author
-    }
+    };
     if (onboardingJSON[currentID].style === 'password')
-      newMessage.style = 'password'
+      newMessage.style = 'password';
 
-    this.props.sendMessage(newMessage)
-    this.setState({ input: '' })
+    this.props.sendMessage(newMessage);
+    this.setState({ input: '' });
   }
 
   render() {
-    const { onboardingJSON, currentID } = this.props
-    const { input } = this.state
+    const { onboardingJSON, currentID } = this.props;
+    const { input } = this.state;
+
+    const disabled = onboardingJSON.length && !onboardingJSON[currentID].validation;
+
     return (
       <div style={styles.chatWindowBottom}>
         <TextField
+          disabled={disabled}
           variant="outlined"
           onChange={(ev) => this.setState({ input: ev.target.value })}
           placeholder="Type here..."
@@ -69,16 +73,17 @@ class ChatInput extends Component {
           }
           onKeyDown={(ev) => {
             if (ev.key === 'Enter' && input.length > 0) {
-              ev.preventDefault()
-              this.sendInput(input)
+              ev.preventDefault();
+              this.sendInput(input);
             }
           }}
         />
         <Button
+          disabled={disabled}
           onClick={(ev) => {
-            ev.preventDefault()
+            ev.preventDefault();
             if (input.length > 0) {
-              this.sendInput(input)
+              this.sendInput(input);
             }
           }}
           style={styles.sendButton}
@@ -86,7 +91,7 @@ class ChatInput extends Component {
           <SendICON />
         </Button>
       </div>
-    )
+    );
   }
 }
 
@@ -95,14 +100,14 @@ function mapStateToProps(state) {
     onboardingJSON: state.json,
     messages: state.messages,
     currentID: state.id
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ setJSON, sendMessage, updateID }, dispatch)
+  return bindActionCreators({ setJSON, sendMessage, updateID }, dispatch);
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ChatInput)
+)(ChatInput);

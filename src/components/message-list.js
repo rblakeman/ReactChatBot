@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import _ from 'lodash'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import _ from 'lodash';
 
-import BeatLoader from 'react-spinners/BeatLoader'
+import BeatLoader from 'react-spinners/BeatLoader';
 
 const styles = {
   chatWindowCenter: {
@@ -31,24 +31,25 @@ const styles = {
   chatText: {
     color: '#B7BFC8' //'#CBD3DC'
   }
-}
+};
 
 class MessageList extends Component {
   componentDidUpdate() {
-    let chatScrollContainer = document.getElementById('chat-scroll')
-    chatScrollContainer.scrollTop = chatScrollContainer.scrollHeight
+    let chatScrollContainer = document.getElementById('chat-scroll');
+    chatScrollContainer.scrollTop = chatScrollContainer.scrollHeight;
   }
 
   render() {
-    const { messages } = this.props
-    return (
-      <div style={styles.chatWindowCenter} id={'chat-scroll'}>
+    const { messages } = this.props;
+
+return (
+      <div style={styles.chatWindowCenter} id='chat-scroll'>
         {messages.length < 1 ? (
           <div style={styles.loadingSpinner}>
-            <BeatLoader size={15} color={'#C6EEF0'} />
+            <BeatLoader size={15} color='#C6EEF0' />
           </div>
         ) : (
-          _.map(messages, (ele, idx) => {
+            _.map(messages, (ele, idx) => {
             return (
               <div key={idx} style={styles.chatMessage}>
                 <div
@@ -63,16 +64,16 @@ class MessageList extends Component {
                 <div style={styles.chatText}>
                   {ele.style === 'password'
                     ? _.map(ele.message.split(''), (ele) => {
-                        return '*'
+                        return '*';
                       })
                     : ele.message}
                 </div>
               </div>
-            )
+            );
           })
         )}
       </div>
-    )
+    );
   }
 }
 
@@ -81,7 +82,7 @@ function mapStateToProps(state) {
     onboardingJSON: state.json,
     messages: state.messages,
     currentID: state.id
-  }
+  };
 }
 
-export default connect(mapStateToProps)(MessageList)
+export default connect(mapStateToProps)(MessageList);

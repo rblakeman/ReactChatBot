@@ -1,17 +1,17 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { setJSON, sendMessage, updateID } from './action'
-import _ from 'lodash'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { setJSON, sendMessage, updateID } from './action';
+import _ from 'lodash';
 
-import logo from './logo.svg'
-import './App.css'
-import MessageList from './components/message-list'
-import ChatInput from './components/chat-input'
+import logo from './logo.svg';
+import './App.css';
+import MessageList from './components/message-list';
+import ChatInput from './components/chat-input';
 
-import { Button } from '@material-ui/core'
-import ChatICON from '@material-ui/icons/ChatOutlined'
-import DownArrowICON from '@material-ui/icons/KeyboardArrowDown'
+import { Button } from '@material-ui/core';
+import ChatICON from '@material-ui/icons/ChatOutlined';
+import DownArrowICON from '@material-ui/icons/KeyboardArrowDown';
 
 const styles = {
   root: {
@@ -68,127 +68,149 @@ const styles = {
   receipientName: {
     color: '#354058'
   }
-}
+};
 
-const BOT_NAME = 'React Bot'
-const USER_NAME = 'You'
+const BOT_NAME = 'React Bot';
+const USER_NAME = 'You';
 
 class App extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.state = {}
+    this.state = {};
   }
 
   componentDidMount() {
-    this.getOnboardingQuestions()
+    this.getOnboardingQuestions();
   }
 
   componentDidUpdate() {
-    const { messages } = this.props
+    const { messages } = this.props;
 
-    let length = messages.length - 1
+    let length = messages.length - 1;
     if (length > 0) {
       if (messages[length].author !== BOT_NAME)
-        this.checkResponse(messages[length].message)
+        this.checkResponse(messages[length].message);
     }
   }
 
   async getOnboardingQuestions() {
     const URL =
-      'https://gist.githubusercontent.com/pcperini/97fe41fc42ac1c610548cbfebb0a4b88/raw/cc07f09753ad8fefb308f5adae15bf82c7fffb72/cerebral_challenge.json'
+      'https://gist.githubusercontent.com/pcperini/97fe41fc42ac1c610548cbfebb0a4b88/raw/cc07f09753ad8fefb308f5adae15bf82c7fffb72/cerebral_challenge.json';
     fetch(URL)
       .then((res) => {
-        return res.json()
+        // In case the gist is deleted or doesn't load
+        if (!res.ok) {
+            return [
+                {
+                    "id": -1,
+                    "question": "Sorry, we can't help you at this time. Have a nice day!",
+                    "validation": false
+                },
+                {
+                    "id": 1,
+                    "question": "Sorry, we encountered an error. Please try again later!",
+                    "validation": false,
+                    "paths": -1
+                }
+            ];
+        }
+
+        return res.json();
       })
       .then((data) => {
-        this.props.setJSON(data)
+        this.props.setJSON(data);
         this.props.sendMessage({
           message: data[1].question,
           author: BOT_NAME
-        })
-      })
+        });
+      });
   }
 
   checkResponse(message) {
-    const { onboardingJSON, currentID } = this.props
-    if (onboardingJSON[currentID].validation === false) return
+    const { onboardingJSON, currentID } = this.props;
+    if (onboardingJSON[currentID].validation === false) return;
 
     //remove leading/trailing whitespace and lowercase response
-    const originalMessage = message
-    message = _.toLower(_.trim(message))
+    const originalMessage = message;
+    message = _.toLower(_.trim(message));
     if (typeof onboardingJSON[currentID].validation === 'boolean') {
       //no need to verify, succeeded
-      this.postMessage(originalMessage, currentID)
+      this.postMessage(originalMessage, currentID);
 
       this.props.sendMessage({
         message: onboardingJSON[onboardingJSON[currentID].paths].question,
         author: BOT_NAME
-      })
-      this.props.updateID(onboardingJSON[currentID].paths)
-      return
+      });
+      this.props.updateID(onboardingJSON[currentID].paths);
+
+return;
     } else if (typeof onboardingJSON[currentID].validation === 'string') {
       //regex
-      let regexString = new RegExp(onboardingJSON[currentID].validation)
+      let regexString = new RegExp(onboardingJSON[currentID].validation);
       if (regexString.test(message)) {
         //succeeded
-        this.postMessage(originalMessage, currentID)
+        this.postMessage(originalMessage, currentID);
 
-        let newPath = onboardingJSON[currentID].paths
+        let newPath = onboardingJSON[currentID].paths;
         this.props.sendMessage({
           message: onboardingJSON[newPath].question,
           author: BOT_NAME
-        })
-        this.props.updateID(newPath)
-        return
+        });
+        this.props.updateID(newPath);
+
+return;
       } else {
         //failed
         this.props.sendMessage({
           message: `Your response didn't meet the criteria, please try again`,
           author: BOT_NAME
-        })
+        });
         this.props.sendMessage({
           message: onboardingJSON[currentID].question,
           author: BOT_NAME
-        })
-        return
+        });
+
+return;
       }
     } else {
       //mulitple options
       if (_.includes(onboardingJSON[currentID].validation, message)) {
         //succeeded
-        this.postMessage(originalMessage, currentID)
+        this.postMessage(originalMessage, currentID);
 
-        let newPath = -1
+        let newPath = -1;
         if (Object.keys(onboardingJSON[currentID].paths).length > 1) {
-          newPath = onboardingJSON[currentID].paths[message]
+          newPath = onboardingJSON[currentID].paths[message];
         } else {
-          newPath = onboardingJSON[currentID].paths
+          newPath = onboardingJSON[currentID].paths;
         }
-        if (newPath === -1) newPath = 0
+        if (newPath === -1) newPath = 0;
         this.props.sendMessage({
           message: onboardingJSON[newPath].question,
           author: BOT_NAME
-        })
-        this.props.updateID(newPath)
-        return
+        });
+        this.props.updateID(newPath);
+
+return;
       } else {
         //failed response
         this.props.sendMessage({
           message: `I don't understand your response, please try again`,
           author: BOT_NAME
-        })
+        });
         this.props.sendMessage({
           message: onboardingJSON[currentID].question,
           author: BOT_NAME
-        })
-        return
+        });
+
+return;
       }
     }
   }
 
   postMessage(originalMessage, id) {
-    const PUT_URL = `https://jsonplaceholder.typicode.com/posts/${id}`
+    const PUT_URL = `https://jsonplaceholder.typicode.com/posts/${id}`;
     fetch(PUT_URL, {
       method: 'POST',
       headers: {
@@ -197,7 +219,7 @@ class App extends Component {
       body: JSON.stringify(originalMessage)
     }).then((res) => {
       // console.log(res.json)
-    })
+    });
   }
 
   render() {
@@ -225,7 +247,7 @@ class App extends Component {
           <ChatInput author={USER_NAME} />
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -234,14 +256,14 @@ function mapStateToProps(state) {
     onboardingJSON: state.json,
     messages: state.messages,
     currentID: state.id
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ setJSON, sendMessage, updateID }, dispatch)
+  return bindActionCreators({ setJSON, sendMessage, updateID }, dispatch);
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(App)
+)(App);
