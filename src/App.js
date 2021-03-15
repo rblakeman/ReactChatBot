@@ -99,6 +99,23 @@ class App extends Component {
       'https://gist.githubusercontent.com/pcperini/97fe41fc42ac1c610548cbfebb0a4b88/raw/cc07f09753ad8fefb308f5adae15bf82c7fffb72/cerebral_challenge.json'
     fetch(URL)
       .then((res) => {
+        // In case the gist is deleted or doesn't load
+        if (!res.ok) {
+            return [
+                {
+                    "id": -1,
+                    "question": "Sorry, we can't help you at this time. Have a nice day!",
+                    "validation": false
+                },
+                {
+                    "id": 1,
+                    "question": "Sorry, we encountered an error. Please try again later!",
+                    "validation": false,
+                    "paths": -1
+                }
+            ]
+        }
+
         return res.json()
       })
       .then((data) => {

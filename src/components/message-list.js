@@ -42,13 +42,13 @@ class MessageList extends Component {
   render() {
     const { messages } = this.props
     return (
-      <div style={styles.chatWindowCenter} id={'chat-scroll'}>
+      <div style={styles.chatWindowCenter} id='chat-scroll'>
         {messages.length < 1 ? (
           <div style={styles.loadingSpinner}>
-            <BeatLoader size={15} color={'#C6EEF0'} />
+            <BeatLoader size={15} color='#C6EEF0' />
           </div>
         ) : (
-          _.map(messages, (ele, idx) => {
+            _.map(messages, (ele, idx) => {
             return (
               <div key={idx} style={styles.chatMessage}>
                 <div

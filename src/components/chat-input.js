@@ -53,9 +53,13 @@ class ChatInput extends Component {
   render() {
     const { onboardingJSON, currentID } = this.props
     const { input } = this.state
+
+    const disabled = onboardingJSON.length && !onboardingJSON[currentID].validation
+
     return (
       <div style={styles.chatWindowBottom}>
         <TextField
+          disabled={disabled}
           variant="outlined"
           onChange={(ev) => this.setState({ input: ev.target.value })}
           placeholder="Type here..."
@@ -75,6 +79,7 @@ class ChatInput extends Component {
           }}
         />
         <Button
+          disabled={disabled}
           onClick={(ev) => {
             ev.preventDefault()
             if (input.length > 0) {
