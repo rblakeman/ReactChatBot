@@ -4,6 +4,7 @@
         "browser": true
     },
     "rules": {
+        "indent": ["error", 4],
         "semi": "error",
         "no-multiple-empty-lines": "error",
         "newline-before-return": "error",
