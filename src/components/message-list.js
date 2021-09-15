@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 import BeatLoader from 'react-spinners/BeatLoader';
 
 const styles = {
@@ -48,7 +47,7 @@ class MessageList extends Component {
                         <BeatLoader size={15} color='#C6EEF0' />
                     </div>
                 ) : (
-                    _.map(messages, (ele, idx) => {
+                    messages.map((ele, idx) => {
                         return (
                             <div key={idx} style={styles.chatMessage}>
                                 <div
@@ -62,7 +61,7 @@ class MessageList extends Component {
                                 </div>
                                 <div style={styles.chatText}>
                                     {ele.style === 'password'
-                                        ? _.map(ele.message.split(''), (ele) => {
+                                        ? ele.message.split('').map((ele) => {
                                             return '*';
                                         })
                                         : ele.message}

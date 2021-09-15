@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import _ from 'lodash';
 import { Button } from '@material-ui/core';
 import ChatICON from '@material-ui/icons/ChatOutlined';
 import DownArrowICON from '@material-ui/icons/KeyboardArrowDown';
@@ -78,7 +77,7 @@ class App extends Component {
 
         this.state = {};
 
-        console.log('last updated: March 16, 2021');
+        console.log('last updated: September 14, 2021');
     }
 
     componentDidMount() {
@@ -134,7 +133,7 @@ class App extends Component {
 
         //remove leading/trailing whitespace and lowercase response
         const originalMessage = message;
-        message = _.toLower(_.trim(message));
+        message = message.trim().toLowerCase();
         if (typeof onboardingJSON[currentID].validation === 'boolean') {
             //no need to verify, succeeded
             this.postMessage(originalMessage, currentID);
@@ -176,7 +175,7 @@ class App extends Component {
             }
         } else {
             //mulitple options
-            if (_.includes(onboardingJSON[currentID].validation, message)) {
+            if (onboardingJSON[currentID].validation.includes(message)) {
                 //succeeded
                 this.postMessage(originalMessage, currentID);
 
