@@ -1,21 +1,14 @@
 {
   "files": {
-    "main.css": "/ReactChatBot/static/css/main.d9a5170b.chunk.css",
-    "main.js": "/ReactChatBot/static/js/main.24192a93.chunk.js",
-    "main.js.map": "/ReactChatBot/static/js/main.24192a93.chunk.js.map",
-    "runtime-main.js": "/ReactChatBot/static/js/runtime-main.59b02318.js",
-    "runtime-main.js.map": "/ReactChatBot/static/js/runtime-main.59b02318.js.map",
-    "static/js/2.2b8baa27.chunk.js": "/ReactChatBot/static/js/2.2b8baa27.chunk.js",
-    "static/js/2.2b8baa27.chunk.js.map": "/ReactChatBot/static/js/2.2b8baa27.chunk.js.map",
+    "main.css": "/ReactChatBot/static/css/main.a6a86f64.css",
+    "main.js": "/ReactChatBot/static/js/main.c078731f.js",
+    "static/media/logo.svg": "/ReactChatBot/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
     "index.html": "/ReactChatBot/index.html",
-    "static/css/main.d9a5170b.chunk.css.map": "/ReactChatBot/static/css/main.d9a5170b.chunk.css.map",
-    "static/js/2.2b8baa27.chunk.js.LICENSE.txt": "/ReactChatBot/static/js/2.2b8baa27.chunk.js.LICENSE.txt",
-    "static/media/logo.103b5fa1.svg": "/ReactChatBot/static/media/logo.103b5fa1.svg"
+    "main.a6a86f64.css.map": "/ReactChatBot/static/css/main.a6a86f64.css.map",
+    "main.c078731f.js.map": "/ReactChatBot/static/js/main.c078731f.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.59b02318.js",
-    "static/js/2.2b8baa27.chunk.js",
-    "static/css/main.d9a5170b.chunk.css",
-    "static/js/main.24192a93.chunk.js"
+    "static/css/main.a6a86f64.css",
+    "static/js/main.c078731f.js"
   ]
 }
