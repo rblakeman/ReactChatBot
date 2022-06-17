@@ -77,7 +77,7 @@ class App extends Component {
 
         this.state = {};
 
-        console.log('last updated: September 14, 2021');
+        console.log('last updated: June 17, 2022');
     }
 
     componentDidMount() {
@@ -95,8 +95,7 @@ class App extends Component {
     }
 
     async getOnboardingQuestions() {
-        const URL =
-      'https://gist.githubusercontent.com/pcperini/97fe41fc42ac1c610548cbfebb0a4b88/raw/cc07f09753ad8fefb308f5adae15bf82c7fffb72/cerebral_challenge.json';
+        const URL = 'https://gist.githubusercontent.com/pcperini/97fe41fc42ac1c610548cbfebb0a4b88/raw/cc07f09753ad8fefb308f5adae15bf82c7fffb72/cerebral_challenge.json';
         fetch(URL)
             .then((res) => {
                 // In case the gist is deleted or doesn't load
