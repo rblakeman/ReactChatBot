@@ -16,6 +16,10 @@
         "redux": "^4.2.0",
         "redux-promise": "^0.6.0"
     },
+    "devDependencies": {
+        "@babel/eslint-parser": "^7.18.2",
+        "@babel/preset-react": "^7.17.12"
+    },
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
