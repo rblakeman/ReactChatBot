@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { Button, TextField } from '@material-ui/core';
 import SendICON from '@material-ui/icons/SendOutlined';
 
 import { setJSON, sendMessage, updateID } from '../action';
+import type { Json, ReduxState } from '../typings';
 
 const styles = {
     chatWindowBottom: {
         backgroundColor: '#EBF5F6', //'#CBD3DC',
         height: '60px',
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'row' as 'row',
         padding: '20px'
     },
     inputBox: {
@@ -30,21 +31,38 @@ const styles = {
     }
 };
 
-class ChatInput extends Component {
-    constructor(props) {
+type NewMessage = {
+    author: string;
+    message: string;
+    style?: 'password';
+}
+
+type Props = {
+    author: string;
+    currentID: number;
+    onboardingJSON: Json[];
+    sendMessage: ({ message, author }: NewMessage) => void;
+};
+type State = {
+    input: string
+};
+
+class ChatInput extends Component<Props, State> {
+    constructor(props: Props) {
         super(props);
 
         this.state = { input: '' };
     }
 
-    sendInput(message) {
-        const { onboardingJSON, currentID } = this.props;
-        let newMessage = {
+    sendInput(message: string) {
+        const { onboardingJSON, currentID} = this.props;
+        let newMessage: NewMessage = {
             message: message,
             author: this.props.author
         };
-        if (onboardingJSON[currentID].style === 'password')
+        if (onboardingJSON[currentID].style === 'password') {
             newMessage.style = 'password';
+        }
 
         this.props.sendMessage(newMessage);
         this.setState({ input: '' });
@@ -54,7 +72,7 @@ class ChatInput extends Component {
         const { onboardingJSON, currentID } = this.props;
         const { input } = this.state;
 
-        const disabled = onboardingJSON.length && !onboardingJSON[currentID].validation;
+        const disabled = onboardingJSON.length && !onboardingJSON[currentID].validation || false;
 
         return (
             <div style={styles.chatWindowBottom}>
@@ -68,7 +86,7 @@ class ChatInput extends Component {
                     type={
                         onboardingJSON.length > 0 && onboardingJSON[currentID].style === 'password'
                             ? 'password'
-                            : null
+                            : 'default'
                     }
                     onKeyDown={(ev) => {
                         if (ev.key === 'Enter' && input.length > 0) {
@@ -94,7 +112,7 @@ class ChatInput extends Component {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state: ReduxState) {
     return {
         onboardingJSON: state.json,
         messages: state.messages,
@@ -102,7 +120,7 @@ function mapStateToProps(state) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: Dispatch) {
     return bindActionCreators({ setJSON, sendMessage, updateID }, dispatch);
 }
 
