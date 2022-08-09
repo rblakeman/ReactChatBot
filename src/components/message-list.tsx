@@ -2,20 +2,22 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import BeatLoader from 'react-spinners/BeatLoader';
 
+import type { Message, ReduxState } from '../typings';
+
 const styles = {
     chatWindowCenter: {
         backgroundColor: '#FFFFFF',
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'column' as 'column',
         flex: 1,
-        overflowY: 'scroll',
+        overflowY: 'scroll' as 'scroll',
         padding: '10px 20px'
     },
     loadingSpinner: {
         alignSelf: 'center',
         paddingTop: '100px'
     },
-    receipientName: {
+    recipientName: {
         color: '#354058'
     },
     authorName: {
@@ -23,7 +25,7 @@ const styles = {
     },
     chatMessage: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'column' as 'column',
         padding: '5px 0px'
     },
     chatText: {
@@ -31,14 +33,20 @@ const styles = {
     }
 };
 
-class MessageList extends Component {
+type Props = {
+    messages: Message[];
+    user: string;
+};
+type State = {};
+
+class MessageList extends Component<Props, State> {
     componentDidUpdate() {
-        let chatScrollContainer = document.getElementById('chat-scroll');
+        let chatScrollContainer = document.getElementById('chat-scroll')!;
         chatScrollContainer.scrollTop = chatScrollContainer.scrollHeight;
     }
 
     render() {
-        const { messages } = this.props;
+        const { messages, user } = this.props;
 
         return (
             <div style={styles.chatWindowCenter} id='chat-scroll'>
@@ -47,21 +55,21 @@ class MessageList extends Component {
                         <BeatLoader size={15} color='#C6EEF0' />
                     </div>
                 ) : (
-                    messages.map((ele, idx) => {
+                    messages.map((ele: Message, idx) => {
                         return (
                             <div key={idx} style={styles.chatMessage}>
                                 <div
                                     style={
-                                        ele.author === this.props.user
+                                        ele.author === user
                                             ? styles.authorName
-                                            : styles.receipientName
+                                            : styles.recipientName
                                     }
                                 >
                                     {ele.author}
                                 </div>
                                 <div style={styles.chatText}>
                                     {ele.style === 'password'
-                                        ? ele.message.split('').map((ele) => {
+                                        ? ele.message.split('').map((ele: string) => {
                                             return '*';
                                         })
                                         : ele.message}
@@ -75,7 +83,7 @@ class MessageList extends Component {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state: ReduxState) {
     return {
         onboardingJSON: state.json,
         messages: state.messages,

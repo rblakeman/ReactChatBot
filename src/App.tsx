@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { Button } from '@material-ui/core';
 import ChatICON from '@material-ui/icons/ChatOutlined';
 import DownArrowICON from '@material-ui/icons/KeyboardArrowDown';
 
 import { setJSON, sendMessage, updateID } from './action';
+// @ts-expect-error IGNORE
 import logo from './logo.svg';
 import './App.css';
 import MessageList from './components/message-list';
 import ChatInput from './components/chat-input';
+import { Json, Message, ReduxState } from './typings';
 
 const styles = {
     root: {
@@ -17,7 +19,7 @@ const styles = {
         backgroundImage:
       'linear-gradient( -7deg, #B1E8EC 0%, #B1E8EC 50%, #BEEEF0 50%, #BEEEF0 50%)',
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'column' as 'column',
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh'
@@ -37,7 +39,7 @@ const styles = {
     },
     supportText: {
         color: '#CBD3DC',
-        textTransform: 'none',
+        textTransform: 'none' as 'none',
         fontSize: '16px'
     },
     supportFakeButton: {
@@ -45,7 +47,7 @@ const styles = {
     },
     chatWindow: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'column' as 'column',
         width: '450px',
         height: '450px',
         boxShadow: '0px 12px 40px -10px rgba(0,0,0,0.3)'
@@ -54,16 +56,16 @@ const styles = {
         backgroundColor: '#EBF5F6', //'#CBD3DC',
         height: '70px',
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'row' as 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
         paddingLeft: '10px'
     },
-    receipientPic: {
+    recipientPic: {
         // borderRadius: '100%',
         width: '70px'
     },
-    receipientName: {
+    recipientName: {
         color: '#354058'
     }
 };
@@ -71,13 +73,25 @@ const styles = {
 const BOT_NAME = 'React Bot';
 const USER_NAME = 'You';
 
-class App extends Component {
-    constructor(props) {
+type ReduxProps = {
+    sendMessage: typeof sendMessage;
+    setJSON: typeof setJSON;
+    updateID: typeof updateID;
+};
+type Props = {
+    messages: Message[];
+    onboardingJSON: Json[];
+    currentID: number;
+} & ReduxProps;
+type State = {};
+
+class App extends Component<Props, State> {
+    constructor(props: Props) {
         super(props);
 
         this.state = {};
 
-        console.log('last updated: June 17, 2022');
+        console.log('last updated: Aug 8, 2022');
     }
 
     componentDidMount() {
@@ -126,34 +140,40 @@ class App extends Component {
             });
     }
 
-    checkResponse(message) {
+    checkResponse(message: string) {
         const { onboardingJSON, currentID } = this.props;
-        if (onboardingJSON[currentID].validation === false) return;
+        const currentPrompt = onboardingJSON[currentID];
+
+        if (currentPrompt.validation === false) return;
 
         //remove leading/trailing whitespace and lowercase response
         const originalMessage = message;
         message = message.trim().toLowerCase();
-        if (typeof onboardingJSON[currentID].validation === 'boolean') {
+        if (typeof currentPrompt.validation === 'boolean') {
             //no need to verify, succeeded
             this.postMessage(originalMessage, currentID);
 
+            const nextPath = currentPrompt.paths as number;
+
             this.props.sendMessage({
-                message: onboardingJSON[onboardingJSON[currentID].paths].question,
+                message: onboardingJSON[nextPath].question,
                 author: BOT_NAME
             });
-            this.props.updateID(onboardingJSON[currentID].paths);
+
+            this.props.updateID(currentPrompt.paths as number);
 
             return;
-        } else if (typeof onboardingJSON[currentID].validation === 'string') {
+        } else if (typeof currentPrompt.validation === 'string') {
             //regex
-            let regexString = new RegExp(onboardingJSON[currentID].validation);
+            let regexString = new RegExp(currentPrompt.validation);
             if (regexString.test(message)) {
                 //succeeded
                 this.postMessage(originalMessage, currentID);
 
-                let newPath = onboardingJSON[currentID].paths;
+                let newPath = currentPrompt.paths as number;
+                let nextPrompt = onboardingJSON[newPath];
                 this.props.sendMessage({
-                    message: onboardingJSON[newPath].question,
+                    message: nextPrompt.question,
                     author: BOT_NAME
                 });
                 this.props.updateID(newPath);
@@ -166,27 +186,30 @@ class App extends Component {
                     author: BOT_NAME
                 });
                 this.props.sendMessage({
-                    message: onboardingJSON[currentID].question,
+                    message: currentPrompt.question,
                     author: BOT_NAME
                 });
 
                 return;
             }
         } else {
-            //mulitple options
-            if (onboardingJSON[currentID].validation.includes(message)) {
+            //multiple options
+            if (currentPrompt.validation.includes(message)) {
                 //succeeded
                 this.postMessage(originalMessage, currentID);
 
                 let newPath = -1;
-                if (Object.keys(onboardingJSON[currentID].paths).length > 1) {
-                    newPath = onboardingJSON[currentID].paths[message];
+                if (Object.keys(currentPrompt.paths as {}).length > 1) {
+                    const potentialPaths = currentPrompt.paths as {};
+
+                    newPath = potentialPaths[message as keyof {}];
                 } else {
-                    newPath = onboardingJSON[currentID].paths;
+                    newPath = currentPrompt.paths as number;
                 }
                 if (newPath === -1) newPath = 0;
+                let nextPrompt = onboardingJSON[newPath];
                 this.props.sendMessage({
-                    message: onboardingJSON[newPath].question,
+                    message: nextPrompt.question,
                     author: BOT_NAME
                 });
                 this.props.updateID(newPath);
@@ -199,7 +222,7 @@ class App extends Component {
                     author: BOT_NAME
                 });
                 this.props.sendMessage({
-                    message: onboardingJSON[currentID].question,
+                    message: currentPrompt.question,
                     author: BOT_NAME
                 });
 
@@ -208,7 +231,7 @@ class App extends Component {
         }
     }
 
-    postMessage(originalMessage, id) {
+    postMessage(originalMessage: string, id: number) {
         const PUT_URL = `https://jsonplaceholder.typicode.com/posts/${id}`;
         fetch(PUT_URL, {
             method: 'POST',
@@ -239,8 +262,8 @@ class App extends Component {
                 </div>
                 <div style={styles.chatWindow}>
                     <div style={styles.chatWindowTop}>
-                        <img src={logo} style={styles.receipientPic} alt="Bot Icon" />
-                        <div style={styles.receipientName}>{BOT_NAME}</div>
+                        <img src={logo} style={styles.recipientPic} alt="Bot Icon" />
+                        <div style={styles.recipientName}>{BOT_NAME}</div>
                     </div>
                     <MessageList user={USER_NAME} />
                     <ChatInput author={USER_NAME} />
@@ -250,7 +273,7 @@ class App extends Component {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state: ReduxState) {
     return {
         onboardingJSON: state.json,
         messages: state.messages,
@@ -258,7 +281,7 @@ function mapStateToProps(state) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: Dispatch) {
     return bindActionCreators({ setJSON, sendMessage, updateID }, dispatch);
 }
 
