@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/ReactChatBot/static/css/main.a6a86f64.css",
-    "main.js": "/ReactChatBot/static/js/main.c078731f.js",
+    "main.js": "/ReactChatBot/static/js/main.c2694cd4.js",
     "static/media/logo.svg": "/ReactChatBot/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
     "index.html": "/ReactChatBot/index.html",
     "main.a6a86f64.css.map": "/ReactChatBot/static/css/main.a6a86f64.css.map",
-    "main.c078731f.js.map": "/ReactChatBot/static/js/main.c078731f.js.map"
+    "main.c2694cd4.js.map": "/ReactChatBot/static/js/main.c2694cd4.js.map"
   },
   "entrypoints": [
     "static/css/main.a6a86f64.css",
-    "static/js/main.c078731f.js"
+    "static/js/main.c2694cd4.js"
   ]
 }
