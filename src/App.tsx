@@ -1,28 +1,27 @@
-import React, { Component } from 'react';
+import ChatICON from '@mui/icons-material/ChatOutlined';
+import DownArrowICON from '@mui/icons-material/KeyboardArrowDown';
+import Button from '@mui/material/Button';
+import { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { Button } from '@material-ui/core';
-import ChatICON from '@material-ui/icons/ChatOutlined';
-import DownArrowICON from '@material-ui/icons/KeyboardArrowDown';
+import { bindActionCreators, type Dispatch } from 'redux';
 
-import { setJSON, sendMessage, updateID } from './action';
-// @ts-expect-error IGNORE
-import logo from './logo.svg';
+import { sendMessage, setJSON, updateID } from './action';
 import './App.css';
-import MessageList from './components/message-list';
 import ChatInput from './components/chat-input';
-import { Json, Message, ReduxState } from './typings';
+import MessageList from './components/message-list';
+import logo from './logo.svg';
+import type { Json, Message, ReduxState } from './typings';
 
 const styles = {
     root: {
         backgroundColor: '#B1E8EC',
         backgroundImage:
-      'linear-gradient( -7deg, #B1E8EC 0%, #B1E8EC 50%, #BEEEF0 50%, #BEEEF0 50%)',
+            'linear-gradient( -7deg, #B1E8EC 0%, #B1E8EC 50%, #BEEEF0 50%, #BEEEF0 50%)',
         display: 'flex',
-        flexDirection: 'column' as 'column',
+        flexDirection: 'column' as const,
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh'
+        height: '100vh',
     },
     supportWindow: {
         backgroundColor: '#354058',
@@ -32,42 +31,42 @@ const styles = {
         justifyContent: 'space-evenly',
         alignItems: 'center',
         boxShadow: '0px -2px 40px -10px rgba(0,0,0,0.3)',
-        borderRadius: '5px 5px 0px 0px'
+        borderRadius: '5px 5px 0px 0px',
     },
     supportIcon: {
-        color: '#5294FC'
+        color: '#5294FC',
     },
     supportText: {
         color: '#CBD3DC',
-        textTransform: 'none' as 'none',
-        fontSize: '16px'
+        textTransform: 'none' as const,
+        fontSize: '16px',
     },
     supportFakeButton: {
-        color: '#5294FC'
+        color: '#5294FC',
     },
     chatWindow: {
         display: 'flex',
-        flexDirection: 'column' as 'column',
+        flexDirection: 'column' as const,
         width: '450px',
         height: '450px',
-        boxShadow: '0px 12px 40px -10px rgba(0,0,0,0.3)'
+        boxShadow: '0px 12px 40px -10px rgba(0,0,0,0.3)',
     },
     chatWindowTop: {
         backgroundColor: '#EBF5F6', //'#CBD3DC',
         height: '70px',
         display: 'flex',
-        flexDirection: 'row' as 'row',
+        flexDirection: 'row' as const,
         alignItems: 'center',
         justifyContent: 'flex-start',
-        paddingLeft: '10px'
+        paddingLeft: '10px',
     },
     recipientPic: {
         // borderRadius: '100%',
-        width: '70px'
+        width: '70px',
     },
     recipientName: {
-        color: '#354058'
-    }
+        color: '#354058',
+    },
 };
 
 const BOT_NAME = 'React Bot';
@@ -83,6 +82,7 @@ type Props = {
     onboardingJSON: Json[];
     currentID: number;
 } & ReduxProps;
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type State = {};
 
 class App extends Component<Props, State> {
@@ -101,7 +101,7 @@ class App extends Component<Props, State> {
     componentDidUpdate() {
         const { messages } = this.props;
 
-        let length = messages.length - 1;
+        const length = messages.length - 1;
         if (length > 0) {
             if (messages[length].author !== BOT_NAME)
                 this.checkResponse(messages[length].message);
@@ -109,23 +109,26 @@ class App extends Component<Props, State> {
     }
 
     async getOnboardingQuestions() {
-        const URL = 'https://gist.githubusercontent.com/pcperini/97fe41fc42ac1c610548cbfebb0a4b88/raw/cc07f09753ad8fefb308f5adae15bf82c7fffb72/cerebral_challenge.json';
+        const URL =
+            'https://gist.githubusercontent.com/pcperini/97fe41fc42ac1c610548cbfebb0a4b88/raw/cc07f09753ad8fefb308f5adae15bf82c7fffb72/cerebral_challenge.json';
         fetch(URL)
             .then((res) => {
                 // In case the gist is deleted or doesn't load
                 if (!res.ok) {
                     return [
                         {
-                            "id": -1,
-                            "question": "Sorry, we can't help you at this time. Have a nice day!",
-                            "validation": false
+                            id: -1,
+                            question:
+                                "Sorry, we can't help you at this time. Have a nice day!",
+                            validation: false,
                         },
                         {
-                            "id": 1,
-                            "question": "Sorry, we encountered an error. Please try again later!",
-                            "validation": false,
-                            "paths": -1
-                        }
+                            id: 1,
+                            question:
+                                'Sorry, we encountered an error. Please try again later!',
+                            validation: false,
+                            paths: -1,
+                        },
                     ];
                 }
 
@@ -135,7 +138,7 @@ class App extends Component<Props, State> {
                 this.props.setJSON(data);
                 this.props.sendMessage({
                     message: data[1].question,
-                    author: BOT_NAME
+                    author: BOT_NAME,
                 });
             });
     }
@@ -157,7 +160,7 @@ class App extends Component<Props, State> {
 
             this.props.sendMessage({
                 message: onboardingJSON[nextPath].question,
-                author: BOT_NAME
+                author: BOT_NAME,
             });
 
             this.props.updateID(currentPrompt.paths as number);
@@ -165,16 +168,16 @@ class App extends Component<Props, State> {
             return;
         } else if (typeof currentPrompt.validation === 'string') {
             //regex
-            let regexString = new RegExp(currentPrompt.validation);
+            const regexString = new RegExp(currentPrompt.validation);
             if (regexString.test(message)) {
                 //succeeded
                 this.postMessage(originalMessage, currentID);
 
-                let newPath = currentPrompt.paths as number;
-                let nextPrompt = onboardingJSON[newPath];
+                const newPath = currentPrompt.paths as number;
+                const nextPrompt = onboardingJSON[newPath];
                 this.props.sendMessage({
                     message: nextPrompt.question,
-                    author: BOT_NAME
+                    author: BOT_NAME,
                 });
                 this.props.updateID(newPath);
 
@@ -183,11 +186,11 @@ class App extends Component<Props, State> {
                 //failed
                 this.props.sendMessage({
                     message: `Your response didn't meet the criteria, please try again`,
-                    author: BOT_NAME
+                    author: BOT_NAME,
                 });
                 this.props.sendMessage({
                     message: currentPrompt.question,
-                    author: BOT_NAME
+                    author: BOT_NAME,
                 });
 
                 return;
@@ -199,18 +202,18 @@ class App extends Component<Props, State> {
                 this.postMessage(originalMessage, currentID);
 
                 let newPath = -1;
-                if (Object.keys(currentPrompt.paths as {}).length > 1) {
-                    const potentialPaths = currentPrompt.paths as {};
+                if (Object.keys(currentPrompt.paths as object).length > 1) {
+                    const potentialPaths = currentPrompt.paths as object;
 
-                    newPath = potentialPaths[message as keyof {}];
+                    newPath = potentialPaths[message as keyof object];
                 } else {
                     newPath = currentPrompt.paths as number;
                 }
                 if (newPath === -1) newPath = 0;
-                let nextPrompt = onboardingJSON[newPath];
+                const nextPrompt = onboardingJSON[newPath];
                 this.props.sendMessage({
                     message: nextPrompt.question,
-                    author: BOT_NAME
+                    author: BOT_NAME,
                 });
                 this.props.updateID(newPath);
 
@@ -219,11 +222,11 @@ class App extends Component<Props, State> {
                 //failed response
                 this.props.sendMessage({
                     message: `I don't understand your response, please try again`,
-                    author: BOT_NAME
+                    author: BOT_NAME,
                 });
                 this.props.sendMessage({
                     message: currentPrompt.question,
-                    author: BOT_NAME
+                    author: BOT_NAME,
                 });
 
                 return;
@@ -236,10 +239,10 @@ class App extends Component<Props, State> {
         fetch(PUT_URL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(originalMessage)
-        }).then((res) => {
+            body: JSON.stringify(originalMessage),
+        }).then(() => {
             // console.log(res.json)
         });
     }
@@ -262,7 +265,11 @@ class App extends Component<Props, State> {
                 </div>
                 <div style={styles.chatWindow}>
                     <div style={styles.chatWindowTop}>
-                        <img src={logo} style={styles.recipientPic} alt="Bot Icon" />
+                        <img
+                            src={logo}
+                            style={styles.recipientPic}
+                            alt='Bot Icon'
+                        />
                         <div style={styles.recipientName}>{BOT_NAME}</div>
                     </div>
                     <MessageList user={USER_NAME} />
@@ -277,7 +284,7 @@ function mapStateToProps(state: ReduxState) {
     return {
         onboardingJSON: state.json,
         messages: state.messages,
-        currentID: state.id
+        currentID: state.id,
     };
 }
 
@@ -285,7 +292,4 @@ function mapDispatchToProps(dispatch: Dispatch) {
     return bindActionCreators({ setJSON, sendMessage, updateID }, dispatch);
 }
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

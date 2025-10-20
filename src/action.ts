@@ -2,21 +2,21 @@ export const SET_JSON = 'SET_JSON';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const UPDATE_ID = 'UPDATE_ID';
 
-import type { Message, Json } from './typings';
+import type { Json, Message } from './typings';
 
 export function setJSON(data: Json) {
     return {
         type: SET_JSON,
-        payload: data
+        payload: data,
     };
 }
 
 export function sendMessage(message: Message) {
-    let data = message;
+    const data = message;
 
     return {
         type: SEND_MESSAGE,
-        payload: data
+        payload: data,
     };
 }
 
@@ -25,6 +25,6 @@ export function updateID(id: number) {
 
     return {
         type: UPDATE_ID,
-        payload: id
+        payload: id,
     };
 }

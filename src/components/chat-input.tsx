@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import SendICON from '@mui/icons-material/SendOutlined';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { Button, TextField } from '@material-ui/core';
-import SendICON from '@material-ui/icons/SendOutlined';
+import { bindActionCreators, type Dispatch } from 'redux';
 
-import { setJSON, sendMessage, updateID } from '../action';
+import { sendMessage, setJSON, updateID } from '../action';
 import type { Json, ReduxState } from '../typings';
 
 const styles = {
@@ -12,8 +13,8 @@ const styles = {
         backgroundColor: '#EBF5F6', //'#CBD3DC',
         height: '60px',
         display: 'flex',
-        flexDirection: 'row' as 'row',
-        padding: '20px'
+        flexDirection: 'row' as const,
+        padding: '20px',
     },
     inputBox: {
         backgroundColor: '#FFFFFF',
@@ -21,21 +22,21 @@ const styles = {
         borderRadius: '5%',
         marginBottom: '0',
         width: '100%',
-        height: '93%'
+        height: '93%',
     },
     sendButton: {
         color: '#FFFFFF',
         backgroundColor: '#5294FC',
         marginLeft: '10px',
-        height: '93%'
-    }
+        height: '93%',
+    },
 };
 
 type NewMessage = {
     author: string;
     message: string;
     style?: 'password';
-}
+};
 
 type Props = {
     author: string;
@@ -44,7 +45,7 @@ type Props = {
     sendMessage: ({ message, author }: NewMessage) => void;
 };
 type State = {
-    input: string
+    input: string;
 };
 
 class ChatInput extends Component<Props, State> {
@@ -55,10 +56,10 @@ class ChatInput extends Component<Props, State> {
     }
 
     sendInput(message: string) {
-        const { onboardingJSON, currentID} = this.props;
-        let newMessage: NewMessage = {
+        const { onboardingJSON, currentID } = this.props;
+        const newMessage: NewMessage = {
             message: message,
-            author: this.props.author
+            author: this.props.author,
         };
         if (onboardingJSON[currentID].style === 'password') {
             newMessage.style = 'password';
@@ -72,19 +73,22 @@ class ChatInput extends Component<Props, State> {
         const { onboardingJSON, currentID } = this.props;
         const { input } = this.state;
 
-        const disabled = onboardingJSON.length && !onboardingJSON[currentID].validation || false;
+        const disabled =
+            (onboardingJSON.length && !onboardingJSON[currentID].validation) ||
+            false;
 
         return (
             <div style={styles.chatWindowBottom}>
                 <TextField
                     disabled={disabled}
-                    variant="outlined"
+                    variant='outlined'
                     onChange={(ev) => this.setState({ input: ev.target.value })}
-                    placeholder="Type here..."
+                    placeholder='Type here...'
                     style={styles.inputBox}
                     value={input}
                     type={
-                        onboardingJSON.length > 0 && onboardingJSON[currentID].style === 'password'
+                        onboardingJSON.length > 0 &&
+                        onboardingJSON[currentID].style === 'password'
                             ? 'password'
                             : 'default'
                     }
@@ -103,8 +107,7 @@ class ChatInput extends Component<Props, State> {
                             this.sendInput(input);
                         }
                     }}
-                    style={styles.sendButton}
-                >
+                    style={styles.sendButton}>
                     <SendICON />
                 </Button>
             </div>
@@ -116,7 +119,7 @@ function mapStateToProps(state: ReduxState) {
     return {
         onboardingJSON: state.json,
         messages: state.messages,
-        currentID: state.id
+        currentID: state.id,
     };
 }
 
@@ -124,7 +127,4 @@ function mapDispatchToProps(dispatch: Dispatch) {
     return bindActionCreators({ setJSON, sendMessage, updateID }, dispatch);
 }
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ChatInput);
+export default connect(mapStateToProps, mapDispatchToProps)(ChatInput);
