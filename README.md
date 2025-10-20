@@ -1,4 +1,4 @@
-# YouTubeApp
+# React Chat Bot
 
 ## Getting Started
 
