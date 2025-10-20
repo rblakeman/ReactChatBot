@@ -8,7 +8,7 @@ export type Json = {
     id: number;
     question: string;
     validation: boolean | string | string[];
-    paths?: number | {};
+    paths?: number | object;
     style?: string;
 };
 

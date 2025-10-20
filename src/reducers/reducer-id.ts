@@ -7,11 +7,11 @@ type Action = {
     payload?: Json[] | Message | number;
 };
 
-export default function(state = initialState, action: Action) {
+export default function (state = initialState, action: Action) {
     switch (action.type) {
-    case UPDATE_ID:
-        return action.payload;
-    default:
-        return state;
+        case UPDATE_ID:
+            return action.payload;
+        default:
+            return state;
     }
 }
